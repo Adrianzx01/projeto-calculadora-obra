@@ -35,3 +35,9 @@ O sistema modela uma planta baixa como um **Grafo $G=(V, A)$**, onde:
 1. Clone o repositório:
    ```bash
    git clone [https://github.com/Adrianzx01/projeto-calculadora-obra.git]
+
+2. Importe o projeto na sua IDE (IntelliJ IDEA recomendada) como um projeto Maven.
+
+3. Execute a classe `ProjetoCalculadoraApplication`.
+
+4. O console do banco de dados poderá ser acessado em: `http://localhost:8080/h2-console`.
