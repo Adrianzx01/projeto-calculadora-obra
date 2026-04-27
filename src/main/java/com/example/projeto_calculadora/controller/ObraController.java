@@ -22,4 +22,13 @@ public class ObraController {
         double volume = service.calcularVolumeConcreto(paredes, alturaViga);
         return new ResultadoCalculo("Volume total de concreto para a fundação", volume);
     }
+
+    @PostMapping("/tijolos")
+    public ResultadoCalculo calcularTijolos(
+            @RequestBody List<Parede> paredes,
+            @RequestParam double largTijolo,
+            @RequestParam double altTijolo) {
+        double quantidade = service.calcularQuantidadeTijolos(paredes, largTijolo, altTijolo);
+        return new ResultadoCalculo("Quantidade total de tijolos necessária", quantidade);
+    }
 }

@@ -15,4 +15,15 @@ public class CalculadoraService {
         }
         return volumeTotal;
     }
+
+    public double calcularQuantidadeTijolos(List<Parede> paredes, double largTijolo, double altTijolo) {
+        double areaTotalParedes = 0;
+        for (Parede parede : paredes) {
+            double areaParede = parede.getComprimento() * parede.getAltura();
+            // areaParede -= (areaJanela + areaPorta);
+            areaTotalParedes += areaParede;
+        }
+        double areaTijolo = largTijolo * altTijolo;
+        return areaTotalParedes / areaTijolo;
+    }
 }
