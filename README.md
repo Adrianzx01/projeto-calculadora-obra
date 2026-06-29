@@ -1,43 +1,63 @@
-# 🦇 Calculadora de Materiais para Obra Residencial
+# Calculadora de Materiais para Obra Residencial
 
-Projeto desenvolvido para a disciplina de **Desenvolvimento de Sistemas** com o objetivo de automatizar o dimensionamento de materiais em fases de obras residenciais utilizando conceitos de Engenharia Civil e Computação.
+Projeto da disciplina de **Desenvolvimento de Sistemas**. O sistema calcula o
+consumo de materiais (concreto e tijolos) em fases de obras residenciais a partir
+da planta informada pelo usuário, e permite salvar e consultar os orçamentos
+gerados.
 
-## 📋 Sobre o Projeto
-O sistema modela uma planta baixa como um **Grafo $G=(V, A)$**, onde:
-* **Vértices (V):** Representam os encontros das paredes (Pilares). 
-* **Arestas (A):** Representam as paredes que possuem dimensões de largura, comprimento, altura e espessura. 
+## Funcionalidades
 
-## 🚀 Funcionalidades
-- **Modelagem de Planta Baixa:** Abstração de pilares e paredes com suporte a aberturas (portas e janelas). 
-- **Cálculo de Concreto:** Serviço REST para calcular o volume de concreto necessário para vigas baldrames (fundação). 
-- **Cálculo de Tijolos:** Serviço REST para calcular a quantidade de tijolos necessária para o fechamento das paredes. 
+- **Cadastro da planta:** o usuário adiciona as paredes da casa informando cômodo,
+  dimensoes (largura, altura, comprimento, espessura) e se possuem porta/janela.
+- **Cálculo de concreto:** volume de concreto necessário para as vigas baldrame
+  (fundação).
+- **Cálculo de tijolos:** quantidade de tijolos necessária para o fechamento das
+  paredes.
+- **Persistência de orçamentos:** cada cálculo é salvo no banco com um número de
+  orçamento e o nome do usuário.
+- **Consulta:** busca de orçamentos salvos pelo nome do usuário.
+## Tecnologias
 
-## 🛠️ Tecnologias Utilizadas
-- **Java 17/21** 
-- **Spring Boot 3.x** 
-- **Spring Data JPA & Hibernate** (ORM para persistência de dados) 
-- **H2 Database** (Banco de dados em memória para testes rápidos) 
-- **Maven** (Gerenciador de dependências) 
+- Java 21
+- Spring Boot 4.0.5
+- Spring Data JPA + Hibernate (ORM para persistência)
+- Banco de dados H2 (em memória)
+- **JSF (Jakarta Faces) via JoinFaces 6.0.5 + PrimeFaces** (frontend)
+- Maven
+## Como executar
 
-## 🛣️ Endpoints
-
-### 1. Calcular Volume de Concreto
-`POST /api/obra/concreto?alturaViga=0.3`
-- **Corpo da requisição:** Lista de objetos `Parede`.
-- **Retorno:** Volume total em $m^3$.
-
-### 2. Calcular Quantidade de Tijolos
-`POST /api/obra/tijolos?largTijolo=0.19&altTijolo=0.19`
-- **Corpo da requisição:** Lista de objetos `Parede`.
-- **Retorno:** Quantidade total de unidades.
-
-## 🔧 Como Executar
-1. Clone o repositório:
-   ```bash
-   git clone [https://github.com/Adrianzx01/projeto-calculadora-obra.git]
-
-2. Importe o projeto na sua IDE (IntelliJ IDEA recomendada) como um projeto Maven.
-
+1. Importe o projeto no IntelliJ IDEA como projeto **Maven**
+   (`File > Open` e selecione a pasta do projeto).
+2. Aguarde o IntelliJ baixar as dependencias
+   (aba Maven no lado direito > botao **Reload**).
 3. Execute a classe `ProjetoCalculadoraApplication`.
+4. Acesse a interface no navegador:
+   `http://localhost:8080/index.xhtml`
+### Console do banco de dados
 
-4. O console do banco de dados poderá ser acessado em: `http://localhost:8080/h2-console`.
+Disponível em `http://localhost:8080/h2-console`
+
+- **JDBC URL:** `jdbc:h2:mem:obradb`
+- **Usuário:** `sa`
+- **Senha:** (em branco)
+## Estrutura do projeto
+
+```
+src/main/java/com/example/projeto_calculadora
+├── bean/OrcamentoBean.java          # Managed Bean: liga a tela JSF ao backend
+├── controller/ObraController.java   # API REST (opcional, ainda disponivel)
+├── model/                           # Entidades (Parede, Orcamento, Pilar)
+├── repository/OrcamentoRepository.java  # Persistencia dos orcamentos (ORM)
+└── service/CalculadoraService.java  # Regras de calculo e geracao de orcamento
+ 
+src/main/resources
+├── META-INF/resources/index.xhtml   # Tela principal (JSF/PrimeFaces)
+└── application.properties           # Configuracoes do banco e do JSF
+```
+
+## API REST (disponivel, alem da interface)
+
+Além da tela JSF, o backend também expõe os cálculos via REST:
+
+- `POST /api/obra/concreto?alturaViga=0.3` — corpo: lista de paredes em JSON
+- `POST /api/obra/tijolos?largTijolo=0.19&altTijolo=0.19` — corpo: lista de paredes em JSON

@@ -28,7 +28,7 @@ public class OrcamentoBean implements Serializable {
 
     // Dados do formulario
     private String nomeUsuario;
-    private double alturaViga = 0.3;   // valores padrao razoaveis
+    private double alturaViga = 0.3;   // valores padrao
     private double largTijolo = 0.19;
     private double altTijolo = 0.19;
 

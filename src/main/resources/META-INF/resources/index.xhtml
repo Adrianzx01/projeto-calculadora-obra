@@ -19,7 +19,6 @@
 
         <h:form id="form">
 
-            <!-- ETAPA 1 - PASSO 1: informar a planta (paredes) -->
             <p:panel header="1) Identificacao e parametros do orcamento" style="margin-bottom:16px;">
                 <h:panelGrid columns="2" cellpadding="6">
                     <p:outputLabel for="nome" value="Nome do usuario:"/>
@@ -82,16 +81,12 @@
             <p:commandButton value="Calcular e salvar orcamento" action="#{orcamentoBean.calcular}"
                              update="form" process="@form"
                              style="font-weight:bold;"/>
-
-            <!-- Resultado do ultimo calculo -->
             <p:panel header="Resultado" rendered="#{orcamentoBean.ultimoOrcamento != null}"
                      style="margin-top:16px;">
                 <p>Orcamento numero: <b>#{orcamentoBean.ultimoOrcamento.id}</b></p>
                 <p>Volume de concreto (m3): <b>#{orcamentoBean.ultimoOrcamento.volumeConcreto}</b></p>
                 <p>Quantidade de tijolos: <b>#{orcamentoBean.ultimoOrcamento.quantidadeTijolos}</b></p>
             </p:panel>
-
-            <!-- ETAPA 1 - PASSO 2: buscar orcamentos salvos -->
             <p:panel header="3) Orcamentos salvos" style="margin-top:24px;">
                 <h:panelGrid columns="3" cellpadding="6">
                     <p:outputLabel value="Filtrar por nome do usuario:"/>

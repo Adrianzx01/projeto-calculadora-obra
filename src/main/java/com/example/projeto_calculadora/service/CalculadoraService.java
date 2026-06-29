@@ -16,8 +16,6 @@ public class CalculadoraService {
         this.orcamentoRepository = orcamentoRepository;
     }
 
-    // ===== Calculos originais (inalterados) =====
-
     public double calcularVolumeConcreto(List<Parede> paredes, double alturaViga) {
         double volumeTotal = 0;
         for (Parede parede : paredes) {
