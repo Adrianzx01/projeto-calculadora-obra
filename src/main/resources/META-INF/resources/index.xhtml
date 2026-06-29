@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:p="primefaces">
+<h:head>
+    <title>Calculadora de Materiais para Obra</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</h:head>
+<h:body>
+    <div style="max-width:980px;margin:20px auto;padding:0 16px;">
+
+        <h1>Calculadora de Materiais para Obra Residencial</h1>
+        <p>Informe a planta cadastrando as paredes, defina os parametros e gere o orcamento.</p>
+
+        <p:growl id="msgs" showDetail="true" life="4000"/>
+
+        <h:form id="form">
+
+            <!-- ETAPA 1 - PASSO 1: informar a planta (paredes) -->
+            <p:panel header="1) Identificacao e parametros do orcamento" style="margin-bottom:16px;">
+                <h:panelGrid columns="2" cellpadding="6">
+                    <p:outputLabel for="nome" value="Nome do usuario:"/>
+                    <p:inputText id="nome" value="#{orcamentoBean.nomeUsuario}" required="true"/>
+
+                    <p:outputLabel for="av" value="Altura da viga baldrame (m):"/>
+                    <p:inputNumber id="av" value="#{orcamentoBean.alturaViga}" decimalPlaces="2"/>
+
+                    <p:outputLabel for="lt" value="Largura do tijolo (m):"/>
+                    <p:inputNumber id="lt" value="#{orcamentoBean.largTijolo}" decimalPlaces="2"/>
+
+                    <p:outputLabel for="at" value="Altura do tijolo (m):"/>
+                    <p:inputNumber id="at" value="#{orcamentoBean.altTijolo}" decimalPlaces="2"/>
+                </h:panelGrid>
+            </p:panel>
+
+            <p:panel header="2) Adicionar parede a planta" style="margin-bottom:16px;">
+                <h:panelGrid columns="2" cellpadding="6">
+                    <p:outputLabel value="Comodo:"/>
+                    <p:inputText value="#{orcamentoBean.paredeAtual.nomeComodo}"/>
+
+                    <p:outputLabel value="Largura (m):"/>
+                    <p:inputNumber value="#{orcamentoBean.paredeAtual.largura}" decimalPlaces="2"/>
+
+                    <p:outputLabel value="Altura (m):"/>
+                    <p:inputNumber value="#{orcamentoBean.paredeAtual.altura}" decimalPlaces="2"/>
+
+                    <p:outputLabel value="Comprimento (m):"/>
+                    <p:inputNumber value="#{orcamentoBean.paredeAtual.comprimento}" decimalPlaces="2"/>
+
+                    <p:outputLabel value="Espessura (m):"/>
+                    <p:inputNumber value="#{orcamentoBean.paredeAtual.espessura}" decimalPlaces="2"/>
+
+                    <p:outputLabel value="Tem janela?"/>
+                    <p:selectBooleanCheckbox value="#{orcamentoBean.paredeAtual.temJanela}"/>
+
+                    <p:outputLabel value="Tem porta?"/>
+                    <p:selectBooleanCheckbox value="#{orcamentoBean.paredeAtual.temPorta}"/>
+                </h:panelGrid>
+                <p:commandButton value="Adicionar parede" action="#{orcamentoBean.adicionarParede}"
+                                 update="form" process="@form" style="margin-top:10px;"/>
+            </p:panel>
+
+            <!-- Lista das paredes ja adicionadas -->
+            <p:dataTable id="tabelaParedes" value="#{orcamentoBean.paredes}" var="par"
+                         emptyMessage="Nenhuma parede adicionada ainda."
+                         style="margin-bottom:16px;">
+                <p:column headerText="Comodo">#{par.nomeComodo}</p:column>
+                <p:column headerText="Larg.">#{par.largura}</p:column>
+                <p:column headerText="Alt.">#{par.altura}</p:column>
+                <p:column headerText="Compr.">#{par.comprimento}</p:column>
+                <p:column headerText="Esp.">#{par.espessura}</p:column>
+                <p:column headerText="Acao">
+                    <p:commandButton icon="pi pi-trash" value="Remover"
+                                     action="#{orcamentoBean.removerParede(par)}"
+                                     update="form" process="@form"/>
+                </p:column>
+            </p:dataTable>
+
+            <p:commandButton value="Calcular e salvar orcamento" action="#{orcamentoBean.calcular}"
+                             update="form" process="@form"
+                             style="font-weight:bold;"/>
+
+            <!-- Resultado do ultimo calculo -->
+            <p:panel header="Resultado" rendered="#{orcamentoBean.ultimoOrcamento != null}"
+                     style="margin-top:16px;">
+                <p>Orcamento numero: <b>#{orcamentoBean.ultimoOrcamento.id}</b></p>
+                <p>Volume de concreto (m3): <b>#{orcamentoBean.ultimoOrcamento.volumeConcreto}</b></p>
+                <p>Quantidade de tijolos: <b>#{orcamentoBean.ultimoOrcamento.quantidadeTijolos}</b></p>
+            </p:panel>
+
+            <!-- ETAPA 1 - PASSO 2: buscar orcamentos salvos -->
+            <p:panel header="3) Orcamentos salvos" style="margin-top:24px;">
+                <h:panelGrid columns="3" cellpadding="6">
+                    <p:outputLabel value="Filtrar por nome do usuario:"/>
+                    <p:inputText value="#{orcamentoBean.filtroUsuario}"/>
+                    <p:commandButton value="Buscar" action="#{orcamentoBean.atualizarHistorico}"
+                                     update="form" process="@form"/>
+                </h:panelGrid>
+
+                <p:dataTable value="#{orcamentoBean.historico}" var="o"
+                             emptyMessage="Nenhum orcamento encontrado.">
+                    <p:column headerText="Numero">#{o.id}</p:column>
+                    <p:column headerText="Usuario">#{o.nomeUsuario}</p:column>
+                    <p:column headerText="Concreto (m3)">#{o.volumeConcreto}</p:column>
+                    <p:column headerText="Tijolos">#{o.quantidadeTijolos}</p:column>
+                    <p:column headerText="Data">#{o.dataCriacao}</p:column>
+                </p:dataTable>
+            </p:panel>
+
+        </h:form>
+    </div>
+</h:body>
+</html>
